@@ -13,37 +13,48 @@ import processing.core.*;
 import java.util.ArrayList;
 
 
-public class RayCaster extends PClass{
+public class RayCaster{
 	
 	private GameplayScene scene;
-	private PVector hitPoint;
-	private PVector currentPoint;
+	private PVector hitPoint = new PVector();
+	private PVector currentPoint = new PVector();
 	private float currentRadius;
 	private ArrayList<PVector> points = new ArrayList<PVector>();
 	private ArrayList<Float> rads = new ArrayList<Float>();
 	private boolean debug = true;
 	
-	private PVector hit;
-	
-	public RayCaster(SideScroller game, GameplayScene scene) {
-		super(game);
+	private PVector hit = new PVector();
+	private boolean isHit;
+	public RayCaster(GameplayScene scene) {
 		this.scene = scene;
 	}
 	
 	//returns distance
 	public float Cast(EditableObject castObject, float angle) {
+		System.out.println("made it here");
+		isHit = false;
 		currentPoint = castObject.pos;
 		currentPoint = getNextValidPoint(angle);
+		float rayDistance = PVector.dist(currentPoint, castObject.pos);
 		
 		
 		//keep on marching until the current radius is less that .5
 		while(currentRadius > 0.5f) {
+			System.out.println("looping...");
 			currentPoint = getNextValidPoint(angle);
+			rayDistance = PVector.dist(currentPoint, castObject.pos);
+			System.out.println(rayDistance);
+			if(rayDistance > 1000) {
+				return rayDistance;
+			}
 		}
 		
 		//hit
+		isHit = true;
 		hit = currentPoint;
+		
 		float hitDistance = PVector.dist(castObject.pos, hit);
+		System.out.println("woopwoop: " + hitDistance);
 		return hitDistance;
 	}
 	
@@ -76,7 +87,8 @@ public class RayCaster extends PClass{
 			for(int i = 0; i < this.points.size(); i++) {
 				drawPoint = this.points.get(i);
 				drawRadius = this.rads.get(i);
-				this.applet.ellipse(drawPoint.x, drawPoint.y, drawRadius, drawRadius);
+				this.scene.applet.stroke(255,0,0);
+				this.scene.applet.ellipse(drawPoint.x, drawPoint.y, drawRadius, drawRadius);
 			}
 		}
 	}

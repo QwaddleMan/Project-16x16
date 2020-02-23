@@ -21,6 +21,7 @@ import project_16x16.SideScroller;
 import project_16x16.Tileset;
 import project_16x16.Tileset.tileType;
 import project_16x16.Util;
+import project_16x16.components.RayCaster;
 import project_16x16.Audio.BGM;
 import project_16x16.SideScroller.GameScenes;
 import project_16x16.ui.Anchor;
@@ -101,15 +102,21 @@ public class GameplayScene extends PScene {
 	private PVector mouseDown, origPos;
 
 	private SelectionBox selectionBox;
-
+	
+	private RayCaster caster;
+	private float distance;
+	
 	public GameplayScene(SideScroller a, String levelString) {
 		super(a);
 		this.levelString = levelString;
 		setup();
+		
 	}
 
 	private void setup() {
-
+		
+		//System.out.println("caster distance = " + distance);
+		
 		projectileObjects = new ArrayList<ProjectileObject>();
 
 		objects = new ArrayList<EditableObject>();
@@ -161,7 +168,8 @@ public class GameplayScene extends PScene {
 		localPlayer.pos.set(0, -100); // TODO spawn location
 
 		loadLevel(levelString); // TODO change level
-
+		caster = new RayCaster(this);
+		distance = caster.Cast(localPlayer, 0.0f);
 		windowTabs = new Tab(applet, tabTexts, tabTexts.length);
 	}
 
@@ -221,6 +229,7 @@ public class GameplayScene extends PScene {
 				break;
 		}
 		drawPlayer();
+		caster.drawDebug();
 	}
 	
 /**
