@@ -6,7 +6,6 @@ package project_16x16.components;
 import processing.core.PVector;
 import processing.core.PApplet;
 import project_16x16.PClass;
-import project_16x16.objects.MagicSourceObject;
 import project_16x16.SideScroller;
 import project_16x16.objects.EditableObject;
 import project_16x16.scene.GameplayScene;
@@ -23,7 +22,7 @@ public class RayCaster{
 	private ArrayList<PVector> points = new ArrayList<PVector>();
 	private ArrayList<Float> rads = new ArrayList<Float>();
 	private boolean debug = true;
-    private EditableObject castObject;
+	
 	private PVector hit = new PVector();
 	private boolean isHit;
 	public RayCaster(GameplayScene scene) {
@@ -32,16 +31,10 @@ public class RayCaster{
 	
 	//returns distance
 	public float Cast(EditableObject castObject, float angle) {
-		//reset everything because bugs.. oh dear god... the bugs... they are everywhere
-		this.isHit = false;
-        this.castObject = castObject;
-        this.hitPoint = new PVector();
-        this.currentPoint = new PVector();
-        this.currentRadius = 9999.9f;
+		System.out.println("made it here");
+		isHit = false;
         this.points = new ArrayList<PVector>();
         this.rads = new ArrayList<Float>();
-        this.hit = new PVector();
-        
                 
 		currentPoint = castObject.pos;
 		currentPoint = getNextValidPoint(angle);
@@ -74,14 +67,13 @@ public class RayCaster{
 		 * a point is along the path. point can not be inside a object. 
 		 */
 		EditableObject closestObject = getClosestObject();
-		float closestDist = PVector.dist(currentPoint, closestObject.pos) - ((closestObject.width + closestObject.height)/4);
-
+		float closestDist = PVector.dist(currentPoint, closestObject.pos);
 		float nextStep = closestDist/2;
 		PVector nextPoint = new PVector();
 		nextPoint.x = this.currentPoint.x + (nextStep * PApplet.cos(angle));
 		nextPoint.y = this.currentPoint.y + (nextStep * PApplet.sin(angle));
 		
-		this.currentRadius = PVector.dist(nextPoint, closestObject.pos) - ((closestObject.width + closestObject.height)/4);
+		this.currentRadius = PVector.dist(nextPoint, closestObject.pos);
 		if(this.debug) {
 			this.points.add(nextPoint);
 			this.rads.add(this.currentRadius);
@@ -100,11 +92,6 @@ public class RayCaster{
 				drawRadius = this.rads.get(i);
                 this.scene.applet.noFill();
 				this.scene.applet.stroke(255,0,0);
-                if(i > 0){
-                    this.scene.applet.line(drawPoint.x, drawPoint.y, this.points.get(i-1).x, this.points.get(i-1).y);
-                }
-
-
 				this.scene.applet.ellipse(drawPoint.x, drawPoint.y, drawRadius, drawRadius);
 			}
 		}
@@ -116,15 +103,14 @@ public class RayCaster{
 		 * to the current point
 		 */
 		float current;
-		EditableObject closestObject = scene.objects.get(12);
-		float closest = PVector.dist(this.currentPoint, closestObject.pos)- ((closestObject.width + closestObject.height)/4); 
+		EditableObject closestObject = scene.objects.get(0);
+		float closest = PVector.dist(this.currentPoint, closestObject.pos) - ((closestObject.width + closestObject.height)/2); 
 		
-		for(int i = 0; i < scene.objects.size(); i++) {
-			current = PVector.dist(this.currentPoint, scene.objects.get(i).pos)- ((closestObject.width + closestObject.height)/4);
-			
+		for(EditableObject obj : scene.objects) {
+			current = PVector.dist(this.currentPoint, obj.pos);
 			if(current < closest)
 				closest = current;
-				closestObject = scene.objects.get(i);
+				closestObject = obj;
 		}
 		return closestObject;
 	}

@@ -105,6 +105,7 @@ public class GameplayScene extends PScene {
 	
 	private RayCaster caster;
 	private float distance;
+    private float rotation;
 	
 	public GameplayScene(SideScroller a, String levelString) {
 		super(a);
@@ -169,7 +170,7 @@ public class GameplayScene extends PScene {
 
 		loadLevel(levelString); // TODO change level
 		caster = new RayCaster(this);
-		distance = caster.Cast(localPlayer, 0.0f);
+        rotation = 0;
 		windowTabs = new Tab(applet, tabTexts, tabTexts.length);
 	}
 
@@ -229,6 +230,12 @@ public class GameplayScene extends PScene {
 				break;
 		}
 		drawPlayer();
+		if(this.applet.isKeyDown('M')){
+                distance = caster.Cast(localPlayer, rotation);
+        }
+        if(this.applet.isKeyDown('N')){
+                rotation += .005;
+        }
 		caster.drawDebug();
 	}
 	
@@ -285,6 +292,10 @@ public class GameplayScene extends PScene {
 			}
 			
 		}
+        localPlayer.debug();
+        for(EditableObject o : objects){
+                o.debug();
+        }
 		localPlayer.display();
 	}
 

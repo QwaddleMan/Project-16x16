@@ -440,6 +440,9 @@ public final class Player extends EditableObject {
 	@Override
 	public void debug() {
 		// TODO Auto-generated method stub
+        applet.stroke(255,0,0);
+        applet.noFill();
+        applet.rect(pos.x, pos.y, width, height);
 	}
 
 	@Override

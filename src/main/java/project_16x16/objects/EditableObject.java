@@ -60,7 +60,7 @@ public abstract class EditableObject extends PClass {
 	 * (focused) in MODIFY mode.
 	 */
 	public void displayEdit() {
-		if (focus) { // focus = held by player
+        if (focus) { // focus = held by player
 			// draw border around object
 			applet.strokeWeight(10);
 			applet.noFill();
